@@ -12,7 +12,7 @@ variable "aws_s3_bucket" {
   description = "S3 Bucket for Zip"
 }
 
-locals {
+local {
   routes = {
     "index" : {
       name : "index"
@@ -20,7 +20,6 @@ locals {
       path = "/"
       policies : "logs:List*",
       resource : "arn:aws:logs:*:*:*"
-
     },
     "questions" : {
       name : "questions"
@@ -47,7 +46,6 @@ locals {
       path = "/question"
       policies : ["dynamodb:DeleteItem"]
       resource : [aws_dynamodb_table.questions.arn]
-
     },
   }
 }
