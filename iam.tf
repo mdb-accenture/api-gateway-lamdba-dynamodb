@@ -1,5 +1,5 @@
 resource "aws_iam_role" "lambda" {
-  for_each = local.routes
+  for_each = locals.routes
   name     = "questions-${var.aws_region}-${each.value.name}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -13,7 +13,7 @@ resource "aws_iam_role" "lambda" {
 }
 
 resource "aws_iam_policy" "lambda_policy" {
-  for_each = local.routes
+  for_each = locals.routes
 
   name = "lambda-${each.value.name}"
   policy = jsonencode({
@@ -38,7 +38,7 @@ resource "aws_iam_policy" "lambda_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "permissions" {
-  for_each   = local.routes
+  for_each   = locals.routes
   policy_arn = aws_iam_policy.lambda_policy[each.value.name].arn
   role       = aws_iam_role.lambda[each.value.name].name
 }
