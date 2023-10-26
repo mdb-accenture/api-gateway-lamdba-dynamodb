@@ -12,7 +12,7 @@ resource "aws_s3_object" "lambda" {
 }
 
 resource "aws_lambda_function" "lambda" {
-  for_each         = locals.routes
+  for_each         = local.routes
   function_name    = each.value.name
   s3_bucket        = var.aws_s3_bucket
   s3_key           = aws_s3_object.lambda.key
@@ -30,7 +30,7 @@ resource "aws_lambda_function" "lambda" {
 }
 
 resource "aws_lambda_permission" "lambda" {
-  for_each      = locals.routes
+  for_each      = local.routes
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda[each.value.name].function_name
@@ -39,7 +39,7 @@ resource "aws_lambda_permission" "lambda" {
 }
 
 resource "aws_cloudwatch_log_group" "cloudwatch" {
-  for_each          = locals.routes
+  for_each          = local.routes
   name              = "/aws/lambda/${aws_lambda_function.lambda[each.value.name].function_name}"
   retention_in_days = 1
 }

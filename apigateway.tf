@@ -36,7 +36,7 @@ resource "aws_apigatewayv2_stage" "apigateway" {
 }
 
 resource "aws_apigatewayv2_integration" "lambda" {
-  for_each           = locals.routes
+  for_each           = local.routes
   api_id             = aws_apigatewayv2_api.api.id
   integration_uri    = aws_lambda_function.lambda[each.value.name].invoke_arn
   integration_type   = "AWS_PROXY"
@@ -50,7 +50,7 @@ resource "aws_apigatewayv2_route" "default_route" {
 }
 
 resource "aws_apigatewayv2_route" "lambda" {
-  for_each  = locals.routes
+  for_each  = local.routes
   api_id    = aws_apigatewayv2_api.api.id
   route_key = "${each.value.http_verb} ${each.value.path}"
   target    = "integrations/${aws_apigatewayv2_integration.lambda[each.value.name].id}"
